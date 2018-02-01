@@ -27,6 +27,18 @@ choi[0][i-1]=new Array(4);
             choi[2][i-1]=new Array(4); 
            }
 }
+var qpic =new Array(3);
+for(i=0;i<3;i++)qpic[i]=new Array(50);
+for(i=0;i<3;i++){
+  for(j=0;j<50;j++){qpic[i][j]="NULL";}
+}
+var apic =new Array(3);
+for(i=0;i<3;i++)apic[i]=new Array(50);
+for(i=0;i<3;i++){
+  for(j=0;j<50;j++){apic[i][j]="NULL";}
+}
+
+
 
 var checked =0;
 var currentno=1;
@@ -93,7 +105,20 @@ function cno(x){
        }
     document.getElementById("reason").innerHTML="คำตอบที่ถูกคือ "+choi[currentsubj][x-1][cans[currentsubj][x-1]-1]+"<br>"+dreason[currentsubj][x-1];
     document.getElementById("question").innerHTML=q[currentsubj][x-1];
-    document.getElementById("c1").innerHTML=choi[currentsubj][x-1][0];
+  //
+  //
+  if(qpic[currentsubj][x-1]!="NULL")
+  { document.getElementById("questionpic").style.display="block"; 
+  }
+  else document.getElementById("questionpic").style.display="none";
+  
+    if(apic[currentsubj][x-1]!="NULL"&&checked==1)
+  { document.getElementById("anspic").style.display="block"; 
+  }
+  else document.getElementById("anspic").style.display="none";
+  //
+  //
+  document.getElementById("c1").innerHTML=choi[currentsubj][x-1][0];
    document.getElementById("c2").innerHTML=choi[currentsubj][x-1][1];
   document.getElementById("c3").innerHTML=choi[currentsubj][x-1][2];
   document.getElementById("c4").innerHTML=choi[currentsubj][x-1][3];
