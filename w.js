@@ -115,6 +115,7 @@ function cno(x){
   
     if(apic[currentsubj][x-1]!="NULL"&&checked==1)
   { document.getElementById("anspic").style.display="block"; 
+   document.getElementById("anspic").src=apic[currentsubj][x-1]; 
   }
   else document.getElementById("anspic").style.display="none";
   //
