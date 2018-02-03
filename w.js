@@ -37,7 +37,7 @@ for(i=0;i<3;i++)apic[i]=new Array(50);
 for(i=0;i<3;i++){
   for(j=0;j<50;j++){apic[i][j]="NULL";}
 }
-
+qpic[0][0]="image/M1.png";
 
 
 var checked =0;
@@ -108,7 +108,8 @@ function cno(x){
   //
   //
   if(qpic[currentsubj][x-1]!="NULL")
-  { document.getElementById("questionpic").style.display="block"; 
+  { document.getElementById("questionpic").src=qpic[currentsubj][x-1]; 
+   document.getElementById("questionpic").style.display="block"; 
   }
   else document.getElementById("questionpic").style.display="none";
   
