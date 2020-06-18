@@ -18,7 +18,7 @@ export default {
     const h = 60 * m
     const start = new Date().getTime()
     const time = 3 * h
-    let u = setInterval(() => {
+    const u = setInterval(() => {
       const now = new Date().getTime()
       const diff = Math.floor(now - start)
       const remain = time - diff
