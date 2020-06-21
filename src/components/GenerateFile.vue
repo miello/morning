@@ -200,7 +200,7 @@ export default {
     },
     HandleExportFile(data) {
       const json = JSON.stringify(data)
-      var element = document.createElement('a')
+      const element = document.createElement('a')
       element.setAttribute(
         'href',
         'data:application/json;charset=utf-8,' + encodeURIComponent(json)
