@@ -1,15 +1,31 @@
 <template>
-  <p class="timecountdown">{{ hour }}h {{ minute }}m {{ second }}s</p>
+  <div>
+    <p v-if="!temp.isDone" class="timecountdown">
+      {{ msg }}
+    </p>
+    <QuestionField :json="data" :isDone="temp" />
+  </div>
 </template>
 
 <script>
+import QuestionField from './QuestionField.vue'
+import json from '../data/question.json'
+
 export default {
   name: 'CountDown',
+  components: {
+    QuestionField
+  },
   data() {
     return {
+      data: json,
       hour: 0,
       minute: 0,
-      second: 0
+      second: 0,
+      msg: 'Loading...',
+      temp: {
+        isDone: false
+      }
     }
   },
   created() {
@@ -17,7 +33,7 @@ export default {
     const m = 60 * ms
     const h = 60 * m
     const start = new Date().getTime()
-    const time = 3 * h
+    const time = this.data.time * m
     const u = setInterval(() => {
       const now = new Date().getTime()
       const diff = Math.floor(now - start)
@@ -32,7 +48,13 @@ export default {
       if (this.second < 10) {
         this.second = `0${this.second}`
       }
+      this.msg = `${this.hour}h ${this.minute}m ${this.second}s`
+      if (this.temp.isDone) {
+        clearInterval(u)
+      }
       if (remain <= 0) {
+        window.alert('หมดเวลาทำข้อสอบ')
+        this.temp.isDone = true
         clearInterval(u)
       }
     }, 1000)
@@ -45,8 +67,8 @@ export default {
 .timecountdown {
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 35%;
-  margin-right: 35%;
+  margin-left: 30%;
+  margin-right: 30%;
   text-align: center;
   font-weight: 300;
   font-size: 30px;

@@ -1,19 +1,21 @@
 <template>
   <div id="app" class="bg">
-    <CountDown />
-    <QuestionField />
+    <ExamField />
   </div>
 </template>
 
 <script>
-import CountDown from './components/CountDownTimer.vue'
-import QuestionField from './components/QuestionField.vue'
+import ExamField from './components/ExamField.vue'
 
 export default {
   name: 'App',
   components: {
-    CountDown,
-    QuestionField
+    ExamField
+  },
+  created() {
+    window.onbeforeunload = () => {
+      return 'คุณต้องการปิดหน้าต่างนี้ ใช่ไหม'
+    }
   }
 }
 </script>

@@ -22,20 +22,39 @@
     <form id="question">
       <p>
         {{ SelectedNo + 1 }}.
-        <!-- {{
-          subject[SelectedSub].question[SelectedNo].detail
-
-        }} -->
+        <!-- {{ subject[SelectedSub].question[SelectedNo].detail }} -->
       </p>
-      <div v-for="index in 4" :key="index">
+      <div
+        v-for="(val, index) in subject[SelectedSub].choice[SelectedNo].choices"
+        :key="index"
+      >
         <input
+          v-if="!isDone.isDone"
           type="radio"
           name="choice"
           :value="index"
+          @click="HandleChangedAnswer(index)"
           v-model="SelectedChoice"
         />
+        <!-- {{ index + 1 + ')' }} {{ val }} -->
         <!-- {{ subject[SelectedSub].choice[SelectedNo][index - 1] }} -->
         <br /><br />
+      </div>
+      <div v-if="isDone.isDone" id="solution">
+        <p id="ans">
+          {{
+            answer[SelectedSub][SelectedNo]
+              ? `คำตอบที่คุณเลือกคือ ข้อ ${answer[SelectedSub][SelectedNo]}`
+              : 'คุณไม่ได้ตอบคำถามข้อนี้'
+          }}
+          <br />
+          <br />
+          คำตอบของข้อนี้คือ ข้อ
+          {{ subject[SelectedSub].solution[SelectedNo].solnum }}
+        </p>
+        <p id="reason">
+          <!-- เฉลย: {{ subject[SelectedSub].solution[SelectedNo].reason }} -->
+        </p>
       </div>
     </form>
     <br />
@@ -44,7 +63,9 @@
         <!-- eslint-disable-next-line vue/no-parsing-error -->
         < ข้อก่อนหน้า
       </button>
-      <button class="btnChecker" @click="HandleChecker">ตรวจคำตอบ</button>
+      <button v-if="!isDone.isDone" class="btnChecker" @click="HandleChecker()">
+        ตรวจคำตอบ
+      </button>
       <button
         class="btnNext"
         v-if="SelectedNo != subject[SelectedSub].number - 1"
@@ -57,30 +78,34 @@
 </template>
 
 <script>
-import json from '../data/question.json'
-import { ExamChecker } from '../checker.js'
+// import { ExamChecker } from '../utils.js'
 
 export default {
+  props: {
+    isDone: Object,
+    json: Object
+  },
   data() {
     return {
-      subject: json.subject,
+      subject: this.json.subject,
       answer: null,
       title: null,
-      ResultExam: null,
       SelectedSub: 0,
       SelectedNo: 0,
-      SelectedChoice: 0,
+      SelectedChoice: undefined,
       CurrentSelect: null
     }
   },
   methods: {
     HandleChecker() {
-      const Selected = []
-      const len = this.subject.length
-      for (let i = 0; i < len; i++) {
-        Selected.push(this.subject[i].solution)
+      const pass = window.confirm('ต้องการส่งคำตอบหรือไม่ ?')
+      if (!pass) {
+        return
       }
-      this.ResultExam = ExamChecker(this.CurrentSelect, Selected)
+      //DON'T UNCOMMENT THIS LINE UNTILE DATA.JSON IS READY
+      // const ResultExam = ExamChecker(this.answer, this.subject)
+      // window.alert(ResultExam)
+      this.isDone.isDone = true
     },
     HandleChangedSub(val) {
       this.SelectedSub = val
@@ -90,6 +115,13 @@ export default {
       this.SelectedNo = val
       this.SelectedChoice = this.answer[this.SelectedSub][this.SelectedNo]
       this.CurrentSelect[this.SelectedSub] = this.SelectedNo
+    },
+    HandleChangedAnswer(newval) {
+      if (this.answer[this.SelectedSub][this.SelectedNo] == newval) {
+        this.answer[this.SelectedSub][this.SelectedNo] = undefined
+        this.SelectedChoice = undefined
+        return
+      }
     }
   },
   watch: {
