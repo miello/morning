@@ -19,47 +19,66 @@
         {{ index }}
       </button>
     </div>
-    <form id="question">
-      <p>
-        {{ SelectedNo + 1 }}.
-        <!-- {{ subject[SelectedSub].question[SelectedNo].detail }} -->
-      </p>
-      <div
-        v-for="(val, index) in subject[SelectedSub].choice[SelectedNo].choices"
-        :key="index"
-      >
-        <input
-          v-if="!isDone.isDone"
-          type="radio"
-          name="choice"
-          :value="index"
-          @click="HandleChangedAnswer(index)"
-          v-model="SelectedChoice"
-        />
-        <!-- {{ index + 1 + ')' }} {{ val }} -->
-        <!-- {{ subject[SelectedSub].choice[SelectedNo][index - 1] }} -->
-        <br /><br />
-      </div>
-      <div v-if="isDone.isDone" id="solution">
-        <p id="ans">
-          {{
-            answer[SelectedSub][SelectedNo]
-              ? `คำตอบที่คุณเลือกคือ ข้อ ${answer[SelectedSub][SelectedNo]}`
-              : 'คุณไม่ได้ตอบคำถามข้อนี้'
-          }}
-          <br />
-          <br />
-          คำตอบของข้อนี้คือ ข้อ
-          {{ subject[SelectedSub].solution[SelectedNo].solnum }}
-        </p>
-        <p id="reason">
-          <!-- เฉลย: {{ subject[SelectedSub].solution[SelectedNo].reason }} -->
-        </p>
-      </div>
-    </form>
+    <div class="question">
+      <form>
+        <p
+          v-html="
+            HandleRender(
+              `${SelectedNo + 1}\\. ${
+                subject[SelectedSub].question[SelectedNo].detail
+              }`
+            )
+          "
+        ></p>
+        <div
+          v-for="(val, index) in subject[SelectedSub].choice[SelectedNo]
+            .choices"
+          :key="index"
+        >
+          <input
+            v-if="!isDone.isDone"
+            type="radio"
+            name="choice"
+            :value="index"
+            @click="HandleChangedAnswer(index)"
+            v-model="SelectedChoice"
+          />
+          <div
+            class="textinput"
+            v-html="
+              HandleRender(
+                `${index + 1}\\) ${
+                  subject[SelectedSub].choice[SelectedNo].choices[index]
+                }`
+              )
+            "
+          ></div>
+        </div>
+        <div v-if="isDone.isDone" id="solution">
+          <p id="ans">
+            {{
+              answer[SelectedSub][SelectedNo]
+                ? `คำตอบที่คุณเลือกคือ ข้อ ${answer[SelectedSub][SelectedNo]}`
+                : 'คุณไม่ได้ตอบคำถามข้อนี้'
+            }}
+            <br />
+            <br />
+            คำตอบที่ถูกต้องคือ ข้อ
+            {{ subject[SelectedSub].solution[SelectedNo].solnum }}
+          </p>
+          <p
+            v-html="
+              HandleRender(
+                `เฉลยละเอียด: ${subject[SelectedSub].solution[SelectedNo].reason}`
+              )
+            "
+          ></p>
+        </div>
+      </form>
+    </div>
     <br />
     <div id="container-selection">
-      <button class="btnPrev" v-if="SelectedNo != 0" @click="SelectedNo--">
+      <button class="btnPrev" :disabled="SelectedNo == 0" @click="SelectedNo--">
         <!-- eslint-disable-next-line vue/no-parsing-error -->
         < ข้อก่อนหน้า
       </button>
@@ -68,7 +87,7 @@
       </button>
       <button
         class="btnNext"
-        v-if="SelectedNo != subject[SelectedSub].number - 1"
+        :disabled="SelectedNo == subject[SelectedSub].number - 1"
         @click="SelectedNo++"
       >
         ข้อถัดไป >
@@ -78,7 +97,8 @@
 </template>
 
 <script>
-// import { ExamChecker } from '../utils.js'
+// eslint-disable-next-line no-unused-vars
+import { ExamChecker, RenderQuestion } from '../utils.js'
 
 export default {
   props: {
@@ -97,12 +117,14 @@ export default {
     }
   },
   methods: {
+    HandleRender(text) {
+      return RenderQuestion(text)
+    },
     HandleChecker() {
       const pass = window.confirm('ต้องการส่งคำตอบหรือไม่ ?')
       if (!pass) {
         return
       }
-      //DON'T UNCOMMENT THIS LINE UNTILE DATA.JSON IS READY
       // const ResultExam = ExamChecker(this.answer, this.subject)
       // window.alert(ResultExam)
       this.isDone.isDone = true
@@ -151,7 +173,25 @@ export default {
   margin-right: 10px;
 }
 
+div.question {
+  background: rgba(209, 209, 209, 0.849);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.textinput {
+  font-size: 16px;
+}
+
 .btnSelection {
   font-size: 16px;
+}
+
+.katex {
+  font-size: 1em !important;
 }
 </style>

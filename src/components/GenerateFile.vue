@@ -109,12 +109,24 @@
       <button v-on:click="HandleAddChoice(SelectedSub, SelectedNo)">
         เพิ่มช้อยส์
       </button>
+      <button v-on:click="HandlePreviewData(SelectedSub, SelectedNo, -1)">
+        Preview ข้อมูล
+      </button>
     </div>
-    <div class="preview"></div>
+    <div class="preview">
+      <fieldset>
+        <p v-html="PreviewData"></p>
+        <p v-html="PreviewReason"></p>
+        <p v-for="(val, index) in PreviewAnswer" :key="index" v-html="val"></p>
+      </fieldset>
+    </div>
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import { RenderQuestion } from '../utils.js'
+
 export default {
   name: 'gen',
   data() {
@@ -124,7 +136,10 @@ export default {
         subject: []
       },
       SelectedSub: -1,
-      SelectedNo: -1
+      SelectedNo: -1,
+      PreviewData: '',
+      PreviewReason: '',
+      PreviewAnswer: []
     }
   },
   methods: {
@@ -162,26 +177,27 @@ export default {
       if (len - 1 == 0) {
         this.SelectedSub = -1
       } else {
-        this.SelectedSub--
+        this.SelectedSub -= 1
       }
     },
     HandleDeleteQuestion(SelectedSub, SelectedNo) {
       if (SelectedSub == -1) {
         return
       }
+      console.log(SelectedSub, SelectedNo)
       const len = this.file.subject[SelectedSub].question.length
       if (len == 0) {
         return
       }
       this.file.subject[SelectedSub].question.splice(SelectedNo, 1)
-      this.file.subject[SelectedSub].choices.splice(SelectedNo, 1)
+      this.file.subject[SelectedSub].choice.splice(SelectedNo, 1)
       this.file.subject[SelectedSub].solution.splice(SelectedNo, 1)
       if (len - 1 == 0) {
         this.SelectedNo = -1
       } else {
-        this.SelectedNo--
+        this.SelectedNo -= 1
       }
-      this.file.subject[SelectedSub].number--
+      this.file.subject[SelectedSub].number -= 1
     },
     HandleAddChoice(SelectedSub, SelectedNo) {
       this.file.subject[SelectedSub].choice[SelectedNo].choices.push('')
@@ -189,10 +205,9 @@ export default {
     HandleDeleteChoice(SelectedSub, SelectedNo, index) {
       this.file.subject[SelectedSub].choice[SelectedNo].choices.splice(index, 1)
     },
-    HandleImportFile(event) {
-      console.log(event.target.files)
+    HandleImportFile() {
       const file = this.$refs.myFile.files[0]
-      let reader = new FileReader()
+      const reader = new FileReader()
       reader.readAsText(file, 'UTF-8')
       reader.onload = evt => {
         this.file = JSON.parse(evt.target.result)
@@ -214,6 +229,21 @@ export default {
 
       document.body.removeChild(element)
     },
+    HandlePreviewData(SelectedSub, SelectedNo) {
+      this.PreviewReason = this.file.subject[SelectedSub].solution[
+        SelectedNo
+      ].reason
+      this.PreviewData = RenderQuestion(
+        `${SelectedNo + 1}\\. ${
+          this.file.subject[SelectedSub].question[SelectedNo].detail
+        }`
+      )
+      this.PreviewAnswer = this.file.subject[SelectedSub].choice[
+        SelectedNo
+      ].choices.map((val, index) => {
+        return RenderQuestion(`${index + 1}\\) ${val}`)
+      })
+    },
     HandleReset() {
       this.file = {
         time: 180,
@@ -221,6 +251,9 @@ export default {
       }
       this.SelectedSub = -1
       this.SelectedNo = -1
+      this.PreviewData = ''
+      this.PreviewReason = ''
+      this.PreviewAnswer = []
     }
   }
 }

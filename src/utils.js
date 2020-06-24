@@ -1,3 +1,25 @@
+import unified from 'unified'
+import markdown from 'remark-parse'
+import math from 'remark-math'
+import remark2rehype from 'remark-rehype'
+import katex from 'rehype-katex'
+import stringify from 'rehype-stringify'
+
+const RenderQuestion = function(text) {
+  let res = ''
+  unified()
+    .use(markdown)
+    .use(math)
+    .use(remark2rehype)
+    .use(katex)
+    .use(stringify)
+    .process(text, function(err, file) {
+      if (err) throw err
+      res = String(file)
+    })
+  return res
+}
+
 const ExamChecker = function(Current, Solution) {
   let Selected = []
   const len = Solution.length
@@ -21,4 +43,4 @@ const ExamChecker = function(Current, Solution) {
   return ResultMessage
 }
 
-export { ExamChecker }
+export { ExamChecker, RenderQuestion }

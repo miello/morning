@@ -9,7 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "katex": "^0.11.1",
+    "rehype": "^11.0.0",
+    "rehype-katex": "^3.0.0",
+    "remark": "^12.0.0",
+    "remark-math": "^2.0.1",
+    "remark-rehype": "^7.0.0",
     "vue": "^2.6.11",
     "vuex": "^3.4.0"
   },

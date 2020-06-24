@@ -9,7 +9,7 @@
 
 <script>
 import QuestionField from './QuestionField.vue'
-import json from '../data/question.json'
+import json from '../data/data.json'
 
 export default {
   name: 'CountDown',

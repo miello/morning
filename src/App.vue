@@ -32,6 +32,10 @@ export default {
   text-align: center;
 }
 
+.katex {
+  font-size: 1em !important;
+}
+
 body,
 html {
   height: 100%;
