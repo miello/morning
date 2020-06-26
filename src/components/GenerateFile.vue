@@ -193,7 +193,6 @@ export default {
       if (SelectedSub == -1) {
         return
       }
-      console.log(SelectedSub, SelectedNo)
       const len = this.file.subject[SelectedSub].question.length
       if (len == 0) {
         return
