@@ -2,11 +2,11 @@
 **/node_modules
 /dist
 /old
-/src/data
 
 # local env files
 .env.local
 .env.*.local
+data.json
 
 # Log files
 npm-debug.log*

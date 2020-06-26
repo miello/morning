@@ -21,24 +21,24 @@ const RenderQuestion = function(text) {
 }
 
 const ExamChecker = function(Current, Solution) {
-  let Selected = []
+  let Sol = []
   const len = Solution.length
   for (let i = 0; i < len; i++) {
-    Selected.push(Solution[i].solution)
+    Sol.push(Solution[i].solution)
   }
   let Score = new Array(len)
   for (let i = 0; i < len; i++) {
     Score[i] = 0
-    const lenarr = Solution[i].length
+    const lenarr = Sol[i].length
     for (let j = 0; j < lenarr; j++) {
-      if (Current[i][j] == Solution[i].solnum) {
+      if (Current[i][j] == Sol[i][j].solnum) {
         Score[i]++
       }
     }
   }
   let ResultMessage = 'คะแนนที่ได้' + '\n'
   for (let i = 0; i < len; i++) {
-    ResultMessage = ResultMessage + `${this.title[i]} : ` + `\n`
+    ResultMessage = ResultMessage + `${Solution[i].name} : ` + `\n`
   }
   return ResultMessage
 }

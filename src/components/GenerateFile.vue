@@ -144,29 +144,38 @@ export default {
   },
   methods: {
     HandleAddSub() {
-      this.file.subject.push({
-        name: ``,
-        number: 0,
-        question: [],
-        choice: [],
-        solution: []
-      })
+      const now = window.prompt(`ต้องการเพิ่มกี่วิชา`, '0')
+      for (let i = 0; i < now; i++) {
+        this.file.subject.push({
+          name: ``,
+          number: 0,
+          question: [],
+          choice: [],
+          solution: []
+        })
+      }
     },
     HandleAddQuestion(SelectedSub) {
       if (SelectedSub == -1) {
         return
       }
-      this.file.subject[SelectedSub].question.push({
-        detail: ''
-      })
-      this.file.subject[SelectedSub].choice.push({
-        choices: []
-      })
-      this.file.subject[SelectedSub].solution.push({
-        solnum: null,
-        reason: ''
-      })
-      this.file.subject[SelectedSub].number++
+      const now = window.prompt(
+        `ต้องการเพิ่มคำถามวิชาที่ ${SelectedSub + 1} กี่ข้อ`,
+        '0'
+      )
+      for (let i = 0; i < now; i++) {
+        this.file.subject[SelectedSub].question.push({
+          detail: ''
+        })
+        this.file.subject[SelectedSub].choice.push({
+          choices: []
+        })
+        this.file.subject[SelectedSub].solution.push({
+          solnum: null,
+          reason: ''
+        })
+        this.file.subject[SelectedSub].number++
+      }
     },
     HandleDeleteSub(SelectedSub) {
       const len = this.file.subject.length
@@ -200,7 +209,10 @@ export default {
       this.file.subject[SelectedSub].number -= 1
     },
     HandleAddChoice(SelectedSub, SelectedNo) {
-      this.file.subject[SelectedSub].choice[SelectedNo].choices.push('')
+      const now = window.prompt('ต้องการเพิ่มกี่ช้อยส์ ?', '0')
+      for (let i = 0; i < now; i++) {
+        this.file.subject[SelectedSub].choice[SelectedNo].choices.push('')
+      }
     },
     HandleDeleteChoice(SelectedSub, SelectedNo, index) {
       this.file.subject[SelectedSub].choice[SelectedNo].choices.splice(index, 1)

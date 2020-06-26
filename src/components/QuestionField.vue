@@ -24,15 +24,12 @@
         <p
           v-html="
             HandleRender(
-              `${SelectedNo + 1}\\. ${
-                subject[SelectedSub].question[SelectedNo].detail
-              }`
+              `${SelectedNo + 1}\\. ${question[SelectedSub][SelectedNo].detail}`
             )
           "
         ></p>
         <div
-          v-for="(val, index) in subject[SelectedSub].choice[SelectedNo]
-            .choices"
+          v-for="(val, index) in choices[SelectedSub][SelectedNo].choices"
           :key="index"
         >
           <input
@@ -48,7 +45,7 @@
             v-html="
               HandleRender(
                 `${index + 1}\\) ${
-                  subject[SelectedSub].choice[SelectedNo].choices[index]
+                  choices[SelectedSub][SelectedNo].choices[index]
                 }`
               )
             "
@@ -64,12 +61,12 @@
             <br />
             <br />
             คำตอบที่ถูกต้องคือ ข้อ
-            {{ subject[SelectedSub].solution[SelectedNo].solnum }}
+            {{ solution[SelectedSub][SelectedNo].solnum }}
           </p>
           <p
             v-html="
               HandleRender(
-                `เฉลยละเอียด: ${subject[SelectedSub].solution[SelectedNo].reason}`
+                `เฉลยละเอียด: ${solution[SelectedSub][SelectedNo].reason}`
               )
             "
           ></p>
@@ -110,6 +107,9 @@ export default {
       subject: this.json.subject,
       answer: null,
       title: null,
+      question: null,
+      choices: null,
+      solution: null,
       SelectedSub: 0,
       SelectedNo: 0,
       SelectedChoice: undefined,
@@ -125,8 +125,13 @@ export default {
       if (!pass) {
         return
       }
-      // const ResultExam = ExamChecker(this.answer, this.subject)
-      // window.alert(ResultExam)
+      const numsub = this.subject.length
+      this.solution = new Array(numsub)
+      for (let i = 0; i < numsub; i++) {
+        this.solution[i] = this.subject[i].solution
+      }
+      const ResultExam = ExamChecker(this.answer, this.subject)
+      window.alert(ResultExam)
       this.isDone.isDone = true
     },
     HandleChangedSub(val) {
@@ -156,8 +161,12 @@ export default {
     this.answer = new Array(numsub)
     this.title = new Array(numsub)
     this.CurrentSelect = new Array(numsub)
+    this.question = new Array(numsub)
+    this.choices = new Array(numsub)
     for (let i = 0; i < numsub; i++) {
       this.CurrentSelect[i] = 0
+      this.question[i] = this.subject[i].question
+      this.choices[i] = this.subject[i].choice
       this.answer[i] = new Array(this.subject[i].number)
       this.title[i] = this.subject[i].name
     }

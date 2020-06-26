@@ -3,13 +3,13 @@
     <p v-if="!temp.isDone" class="timecountdown">
       {{ msg }}
     </p>
-    <QuestionField :json="data" :isDone="temp" />
+    <QuestionField v-if="notload" :json="data" :isDone="temp" />
   </div>
 </template>
 
 <script>
 import QuestionField from './QuestionField.vue'
-import json from '../data/data.json'
+import axios from 'axios'
 
 export default {
   name: 'CountDown',
@@ -18,8 +18,9 @@ export default {
   },
   data() {
     return {
-      data: json,
+      data: null,
       hour: 0,
+      notload: false,
       minute: 0,
       second: 0,
       msg: 'Loading...',
@@ -28,18 +29,25 @@ export default {
       }
     }
   },
-  created() {
+  async beforeCreate() {
+    await axios.get('http://localhost:8080/' + 'data.json').then(response => {
+      console.log(response)
+      this.data = response.data
+    })
+    this.notload = true
     const ms = 1000
     const m = 60 * ms
     const h = 60 * m
     const start = new Date().getTime()
-    const time = this.data.time * m
+    const time = 3600 * m
     const u = setInterval(() => {
       const now = new Date().getTime()
       const diff = Math.floor(now - start)
       const remain = time - diff
       this.hour = Math.floor(remain / h)
-      this.hour = `0${this.hour}`
+      if (this.hour < 10) {
+        this.hour = `0${this.hour}`
+      }
       this.minute = Math.floor((remain - this.hour * h) / m)
       if (this.minute < 10) {
         this.minute = `0${this.minute}`
