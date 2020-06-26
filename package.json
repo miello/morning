@@ -15,8 +15,7 @@
     "remark": "^12.0.0",
     "remark-math": "^2.0.1",
     "remark-rehype": "^7.0.0",
-    "vue": "^2.6.11",
-    "vuex": "^3.4.0"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",

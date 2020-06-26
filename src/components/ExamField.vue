@@ -31,7 +31,6 @@ export default {
   },
   async beforeCreate() {
     await axios.get('http://localhost:8080/' + 'data.json').then(response => {
-      console.log(response)
       this.data = response.data
     })
     this.notload = true
@@ -39,7 +38,7 @@ export default {
     const m = 60 * ms
     const h = 60 * m
     const start = new Date().getTime()
-    const time = 3600 * m
+    const time = this.data.time * m
     const u = setInterval(() => {
       const now = new Date().getTime()
       const diff = Math.floor(now - start)
